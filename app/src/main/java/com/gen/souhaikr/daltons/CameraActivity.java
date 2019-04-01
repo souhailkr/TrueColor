@@ -17,6 +17,7 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 // OpenCV Classes
@@ -37,6 +38,11 @@ public class CameraActivity extends AppCompatActivity implements CvCameraViewLis
     Mat mRgba;
     Mat mRgbaF;
     Mat mRgbaT;
+    Mat LMS ;
+    Mat actRGBVec ;
+    Mat lmsResVec ;
+    Mat lmsMat ;
+
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -108,6 +114,14 @@ public class CameraActivity extends AppCompatActivity implements CvCameraViewLis
         mRgba = new Mat(height, width, CvType.CV_8UC4);
         mRgbaF = new Mat(height, width, CvType.CV_8UC4);
         mRgbaT = new Mat(width, width, CvType.CV_8UC4);
+        LMS = new Mat(3, 3, CvType.CV_32FC1);
+        actRGBVec = new Mat(1,3,CvType.CV_32FC1);
+        lmsResVec = new Mat(1,3,CvType.CV_32FC1);
+        lmsMat = new Mat(height,width,CvType.CV_64FC3);
+
+
+
+
     }
 
     public void onCameraViewStopped() {
@@ -116,13 +130,42 @@ public class CameraActivity extends AppCompatActivity implements CvCameraViewLis
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 
+
         // TODO Auto-generated method stub
-        mRgba = inputFrame.rgba();
-        // Rotate mRgba 90 degrees
+       mRgba = inputFrame.rgba();
+//        // Rotate mRgba 90 degrees
         Core.transpose(mRgba, mRgbaT);
         Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
         Core.flip(mRgbaF, mRgba, 1 );
 
-        return mRgba; // This function must return
+
+
+
+
+        // iterate through all pixels and multiply rgb values with the lms transformation matrix
+        try {
+            for (int x = 0; x < mRgba.rows(); x++) {
+                for (int y = 0; y < mRgba.cols(); y++) {
+
+                    // vector holding rgb info
+                    actRGBVec.put(0, 0, mRgba.get(x, y));
+                    Core.gemm(lmsMat, actRGBVec, 1, null, 0, lmsResVec, 0);
+
+                    LMS.put(x, y, lmsResVec.get(0, 0));
+                    Imgproc.cvtColor(lmsResVec, mRgba, Imgproc.COLOR_RGB2RGBA);
+
+
+                }
+            }
+        }
+        catch (Exception e) {
+            Log.d("ImageHandler","Error rgb to lms conversion! " + e.getMessage());
+        }
+//
+
+
+        return mRgba ;
+
+
     }
 }

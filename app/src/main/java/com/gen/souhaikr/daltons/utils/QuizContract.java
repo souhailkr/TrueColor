@@ -17,6 +17,9 @@ public class QuizContract {
         public static final String KEY_OPTB= "optb"; //option b
         public static final String KEY_OPTC= "optc"; //option c
         public static final String KEY_OPTD= "optd"; //option c
+        public static final String KEY_PROT= "prot";
+        public static final String KEY_DEUT= "deut";
+
 
     }
 }

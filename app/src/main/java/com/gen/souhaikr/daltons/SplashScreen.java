@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 
+import com.gen.souhaikr.daltons.slide.SlideActivity;
+
 public class SplashScreen extends AppCompatActivity {
     ProgressBar progressBar ;
     private final int SPLASH_DISPLAY_LENGTH = 2000;
@@ -26,7 +28,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
-                Intent mainIntent = new Intent(SplashScreen.this,MainActivity.class);
+                Intent mainIntent = new Intent(SplashScreen.this,SlideActivity.class);
                 SplashScreen.this.startActivity(mainIntent);
                 SplashScreen.this.finish();
             }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +32,14 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     List<Question> quesList;
     int qid = 0;
     Question currentQ;
+    int normal = 0;
+    int protanopie = 0;
+    int deutranopie = 0;
+    int total = 0;
+
+
+
+
 
 
     @Override
@@ -95,19 +104,73 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
 
             case R.id.A:
+                if (A.getText().equals(currentQ.getANSWER()))
+                {
+                    normal += 1 ;
+                }
+                else if (A.getText().equals(currentQ.getPr()))
+            {
+                protanopie += 1 ;
+            }
+                else if (A.getText().equals(currentQ.getDe()))
+                {
+                    deutranopie += 1 ;
+                }
 
                 Next();
                 break;
             case R.id.B:
+                if (B.getText().equals(currentQ.getANSWER()))
+                {
+                    normal += 1 ;
+                }
+
+                else if (B.getText().equals(currentQ.getPr()))
+                {
+                    protanopie += 1 ;
+                }
+                else if (B.getText().equals(currentQ.getDe()))
+                {
+                    deutranopie += 1 ;
+                }
                 Next();
                 break;
             case R.id.C:
+                if (C.getText().equals(currentQ.getANSWER()))
+                {
+                    normal += 1 ;
+                }
+
+                else if (C.getText().equals(currentQ.getPr()))
+                {
+                    protanopie += 1 ;
+                }
+                else if (C.getText().equals(currentQ.getDe()))
+                {
+                    deutranopie += 1 ;
+                }
                 Next();
                 break;
             case R.id.D:
+                if (D.getText().equals(currentQ.getANSWER()))
+                {
+                    normal += 1 ;
+                }
+
+                else if (D.getText().equals(currentQ.getPr()))
+                {
+                    protanopie += 1 ;
+                }
+                else if (D.getText().equals(currentQ.getDe()))
+                {
+                    deutranopie += 1 ;
+                }
                 Next();
                 break;
             case R.id.nothing:
+
+                    total += 1 ;
+
                 Next();
                 break;
         }
@@ -117,9 +180,11 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private void Next() {
         count = count + 1;
 
-        if (count < 39) {
+        if (count < 11) {
             imageName = "plate" + count;
-            ishiharaPlate.setText("Ishihara Plate " + count);
+            ishiharaPlate.setText("Ishihara Plate " + count +"/10");
+            Log.i("a","aaaaa" + protanopie + deutranopie + normal + total);
+
 
             testPlate.setImageResource(getResources().getIdentifier(imageName, "drawable", getPackageName()));
 
@@ -128,15 +193,17 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             ishiharaPlate.setVisibility(View.VISIBLE);
 
         } else {
+            if (normal>8)
+            {
 
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-            alertDialogBuilder.setMessage("Your result is .., your color blindness is..");
+            alertDialogBuilder.setMessage("normal.");
                     alertDialogBuilder.setPositiveButton("Go to Camera",
                             new DialogInterface.OnClickListener() {
 
                                 @Override
                                 public void onClick(DialogInterface arg0, int arg1) {
-                                    Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+                                    Intent intent = new Intent(getApplicationContext(), FilterActivity.class);
                                     startActivity(intent);
 
                                 }
@@ -151,6 +218,101 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
+
+
+            }
+
+            else if (protanopie>3)
+            {
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setMessage("Protanopie..");
+                alertDialogBuilder.setPositiveButton("Go to Camera",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+                                startActivity(intent);
+
+                            }
+                        });
+
+                alertDialogBuilder.setNegativeButton("Restart Test",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        restart() ;
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+
+            }
+
+            if (deutranopie>4)
+            {
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setMessage("Deutranopie..");
+                alertDialogBuilder.setPositiveButton("Go to Camera",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+                                startActivity(intent);
+
+                            }
+                        });
+
+                alertDialogBuilder.setNegativeButton("Restart Test",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        restart() ;
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+
+            }
+
+            if (total>7)
+            {
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setMessage("Total blindness..");
+                alertDialogBuilder.setPositiveButton("Go to Camera",
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+                                startActivity(intent);
+
+                            }
+                        });
+
+                alertDialogBuilder.setNegativeButton("Restart Test",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        restart() ;
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+
+            }
+
+
+
+
+
 
 
         }
